@@ -19,3 +19,7 @@ spring:
 server:
   error:
     include-message: always
+
+jwt:
+  secretKey: 35b7ce1a67f811e670e8574880be67a68f4cbe9e068d7a747ab0c1614d620d9e
+  tokenExpirationHours: 1

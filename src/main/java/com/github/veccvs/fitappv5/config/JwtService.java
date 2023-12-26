@@ -9,13 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
-  private static final String SECRET_KEY =
-      "35b7ce1a67f811e670e8574880be67a68f4cbe9e068d7a747ab0c1614d620d9e";
+  @Value("${jwt.secretKey}")
+  private String secretKey;
+
+  @Value("${jwt.tokenExpirationHours}")
+  private Integer tokenExpirationHours;
 
   public String extractedUsername(String token) {
     return extractClaim(token, Claims::getSubject);
@@ -35,7 +39,7 @@ public class JwtService {
         .claims(extraClaims)
         .subject(userDetails.getUsername())
         .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * tokenExpirationHours))
         .signWith(getSignInKey(), Jwts.SIG.HS256)
         .compact();
   }
@@ -58,7 +62,7 @@ public class JwtService {
   }
 
   private SecretKey getSignInKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }
