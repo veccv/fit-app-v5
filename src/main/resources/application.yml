@@ -16,3 +16,6 @@ spring:
   liquibase:
     change-log: classpath:db/liquibase-changelog.xml
     enabled: true
+server:
+  error:
+    include-message: always

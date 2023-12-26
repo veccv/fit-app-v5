@@ -1,6 +1,7 @@
 package com.github.veccvs.fitappv5.auth;
 
 import com.github.veccvs.fitappv5.config.JwtService;
+import com.github.veccvs.fitappv5.exception.ResourceFoundException;
 import com.github.veccvs.fitappv5.user.Role;
 import com.github.veccvs.fitappv5.user.User;
 import com.github.veccvs.fitappv5.user.UserRepository;
@@ -27,6 +28,11 @@ public class AuthenticationService {
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
             .build();
+
+    if (userRepository.findByEmail(user.getEmail()).isPresent())
+      throw new ResourceFoundException(
+          "User with email [%s] already exist.".formatted(user.getEmail()));
+
     userRepository.save(user);
     var jwtToken = jwtService.generateToken(user);
     return AuthenticationResponse.builder().token(jwtToken).build();
