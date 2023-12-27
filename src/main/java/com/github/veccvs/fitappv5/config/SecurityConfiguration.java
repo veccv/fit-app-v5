@@ -30,8 +30,10 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers("/v3/api-docs/**")
                     .permitAll()
+                    .requestMatchers("/error")
+                    .permitAll()
                     .anyRequest()
-                    .authenticated())
+                    .hasAuthority("USER"))
         .sessionManagement(
             sessionManagement ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
