@@ -2,12 +2,16 @@ package com.github.veccvs.fitappv5.auth;
 
 import com.github.veccvs.fitappv5.config.JwtService;
 import com.github.veccvs.fitappv5.exception.ResourceFoundException;
+import com.github.veccvs.fitappv5.exception.ResourceNotFoundException;
 import com.github.veccvs.fitappv5.user.Role;
 import com.github.veccvs.fitappv5.user.User;
 import com.github.veccvs.fitappv5.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +48,14 @@ public class AuthenticationService {
     var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
     var jwtToken = jwtService.generateToken(user);
     return AuthenticationResponse.builder().token(jwtToken).build();
+  }
+
+  public String getUserLogin() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (!(authentication instanceof AnonymousAuthenticationToken)) {
+      return authentication.getName();
+    } else {
+      throw new ResourceNotFoundException("Logged user login not found");
+    }
   }
 }
