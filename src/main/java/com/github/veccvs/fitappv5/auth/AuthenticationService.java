@@ -50,6 +50,13 @@ public class AuthenticationService {
     return AuthenticationResponse.builder().token(jwtToken).build();
   }
 
+  public AuthenticationResponse refreshToken() {
+    var userLogin = getUserLogin();
+    var user = userRepository.findByEmail(userLogin).orElseThrow();
+    var jwtToken = jwtService.generateToken(user);
+    return AuthenticationResponse.builder().token(jwtToken).build();
+  }
+
   public String getUserLogin() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (!(authentication instanceof AnonymousAuthenticationToken)) {
