@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jwt_security
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+    enabled: true
+server:
+  error:
+    include-message: always
+
+jwt:
+  secretKey: 35b7ce1a67f811e670e8574880be67a68f4cbe9e068d7a747ab0c1614d620d9e
+  tokenExpirationHours: 24
