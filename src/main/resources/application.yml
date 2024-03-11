@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/jwt_security
-    username: postgres
-    password: password
+    url: jdbc:postgresql://pg-f6f9efa-elmastapolat-f6f5.a.aivencloud.com:19490/postgresql?sslmode=require
+    username: avnadmin
+    password: AVNS_G9kgjCPGvnvxzHAOr6P
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
