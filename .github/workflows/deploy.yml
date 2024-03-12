@@ -32,6 +32,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            sudo su
             cd /home
             if [ -f "pid.file" ]; then
               sudo kill $(cat pid.file)
