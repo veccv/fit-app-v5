@@ -34,9 +34,9 @@ jobs:
           script: |
             sudo su
             cd /home
-            if [ -f "pid.file" ]; then
-              sudo kill $(cat pid.file)
-              sudo rm pid.file
+            if [ -f "/tmp/pid.file" ]; then
+              sudo kill $(cat /tmp/pid.file)
+              sudo rm /tmp/pid.file
             fi
             sudo rm -rf fit-app-v5
             sudo git clone https://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@github.com/veccv/fit-app-v5
