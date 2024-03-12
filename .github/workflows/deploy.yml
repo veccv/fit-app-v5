@@ -33,7 +33,13 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /home
+            if [ -f "pid.file" ]; then
+              sudo kill $(cat pid.file)
+              rm pid.file
+            fi
             sudo rm -rf fit-app-v5
             sudo git clone https://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@github.com/veccv/fit-app-v5
             cd fit-app-v5
-            sudo ./gradlew bootRun
+            sudo ./gradlew bootRun &
+            echo $! > pid.file
+            disown
