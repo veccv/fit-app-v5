@@ -22,10 +22,39 @@ public class ProductMigrationService {
   private final ObjectMapper mapper = new ObjectMapper();
   private static final Logger logger = LoggerFactory.getLogger(ProductMigrationService.class);
 
+  public List<ProductInformation> getAllProductsInformation() {
+    var productsInformation = new ArrayList<ProductInformation>();
+
+    getFitatuGlobalData()
+        .forEach(
+            product -> {
+              try {
+                ResponseEntity<String> response = getFitatuProductResponse(product.getId());
+                if (response.getStatusCode() == HttpStatus.OK) {
+                  productsInformation.add(processProductInformationResponse(response.getBody()));
+                  logger.info("Got data for product id: {}", product.getId());
+                }
+              } catch (HttpClientErrorException e) {
+                logger.error("Error while getting response from Fitatu API");
+              }
+            });
+
+    return productsInformation;
+  }
+
+  private ProductInformation processProductInformationResponse(String body) {
+    try {
+      return mapper.readValue(body, ProductInformation.class);
+    } catch (JsonProcessingException e) {
+      logger.error("Error while processing response to ProductInformation");
+      return null;
+    }
+  }
+
   public List<ProductModel> getFitatuGlobalData() {
     var products = new ArrayList<ProductModel>();
 
-    for (var i = 17; i < 18; i++) {
+    for (var i = 17; i < 102; i++) {
       logger.info("Getting data for category: {}", i);
       products.addAll(getProductsForCategory(i));
     }
@@ -37,13 +66,7 @@ public class ProductMigrationService {
     var products = new ArrayList<ProductModel>();
 
     for (var j = 0; j < 12; j++) {
-      try {
-        Thread.sleep(2000);
-        products.addAll(getProductData(categoryId, j));
-      } catch (InterruptedException e) {
-        logger.error("Error while waiting for next request");
-        Thread.currentThread().interrupt();
-      }
+      products.addAll(getProductData(categoryId, j));
     }
 
     return products;
@@ -53,7 +76,7 @@ public class ProductMigrationService {
     var products = new ArrayList<ProductModel>();
 
     try {
-      ResponseEntity<String> response = getFitatuResponse(categoryId, page);
+      ResponseEntity<String> response = getFitatuGlobalResponse(categoryId, page);
       if (response.getStatusCode() == HttpStatus.OK) {
         products.addAll(processResponse(response.getBody(), categoryId, page));
       }
@@ -80,13 +103,23 @@ public class ProductMigrationService {
     return products;
   }
 
-  private ResponseEntity<String> getFitatuResponse(Integer categoryId, Integer page) {
+  private ResponseEntity<String> getFitatuGlobalResponse(Integer categoryId, Integer page) {
     String url =
         "https://pl-pl.fitatu.com/api/public/resources/categories/"
             + categoryId
             + "/products?limit=100&page="
             + page;
 
+    return getStringResponseEntity(url);
+  }
+
+  private ResponseEntity<String> getFitatuProductResponse(String productId) {
+    String url = "https://pl-pl.fitatu.com/api/public/resources/products/" + productId;
+
+    return getStringResponseEntity(url);
+  }
+
+  private ResponseEntity<String> getStringResponseEntity(String url) {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("authority", "pl-pl.fitatu.com");

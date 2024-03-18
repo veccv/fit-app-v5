@@ -31,4 +31,13 @@ class ProductMigrationServiceTest {
     // Assert
     assertNotNull(products);
   }
+
+  @Test
+  void testGetAllProductsInformation() {
+    // Act
+    var productsInformation = productMigrationService.getAllProductsInformation();
+
+    // Assert
+    assertNotNull(productsInformation);
+  }
 }
