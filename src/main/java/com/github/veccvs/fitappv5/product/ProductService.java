@@ -24,4 +24,8 @@ public class ProductService {
   public Product createProduct(Product product) {
     return productRepository.save(product);
   }
+
+  public boolean productExists(String name) {
+    return productRepository.existsByName(name);
+  }
 }

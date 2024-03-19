@@ -3,7 +3,8 @@ package com.github.veccvs.fitappv5.product.migration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.veccvs.fitappv5.product.ProductRepository;
+import com.github.veccvs.fitappv5.product.Product;
+import com.github.veccvs.fitappv5.product.ProductService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,9 +19,28 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class ProductMigrationService {
-  private final ProductRepository productRepository;
+  private final ProductService productService;
   private final ObjectMapper mapper = new ObjectMapper();
   private static final Logger logger = LoggerFactory.getLogger(ProductMigrationService.class);
+
+  public boolean migrateProducts() {
+    getAllProductsInformation().stream()
+        .filter(productInformation -> !productService.productExists(productInformation.getName()))
+        .forEach(
+            product -> {
+              productService.createProduct(
+                  new Product(
+                      product.getName(),
+                      product.getProtein(),
+                      product.getCarbohydrate(),
+                      product.getFat(),
+                      product.getSugars(),
+                      product.getEnergy()));
+
+              logger.info("Migrated product: {}", product.getName());
+            });
+    return true;
+  }
 
   public List<ProductInformation> getAllProductsInformation() {
     var productsInformation = new ArrayList<ProductInformation>();
@@ -54,7 +74,7 @@ public class ProductMigrationService {
   public List<ProductModel> getFitatuGlobalData() {
     var products = new ArrayList<ProductModel>();
 
-    for (var i = 17; i < 102; i++) {
+    for (var i = 102; i < 103; i++) {
       logger.info("Getting data for category: {}", i);
       products.addAll(getProductsForCategory(i));
     }
