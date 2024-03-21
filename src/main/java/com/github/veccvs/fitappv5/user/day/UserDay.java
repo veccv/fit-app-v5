@@ -29,9 +29,11 @@ public class UserDay {
 
   @ElementCollection
   @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
+  @Builder.Default
   private List<CustomProduct> breakfastProducts = new ArrayList<>();
 
   @ElementCollection
   @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
+  @Builder.Default
   private List<CustomProduct> lunchProducts = new ArrayList<>();
 }
