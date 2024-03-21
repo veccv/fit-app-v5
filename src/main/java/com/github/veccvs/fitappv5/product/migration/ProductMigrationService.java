@@ -8,6 +8,7 @@ import com.github.veccvs.fitappv5.product.ProductService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +26,24 @@ public class ProductMigrationService {
 
   public boolean migrateProducts() {
     getAllProductsInformation().stream()
+        .filter(Objects::nonNull)
         .filter(productInformation -> !productService.productExists(productInformation.getName()))
         .forEach(
             product -> {
-              productService.createProduct(
-                  new Product(
-                      product.getName(),
-                      product.getProtein(),
-                      product.getCarbohydrate(),
-                      product.getFat(),
-                      product.getSugars(),
-                      product.getEnergy()));
+              try {
+                productService.createProduct(
+                    new Product(
+                        product.getName(),
+                        product.getProtein(),
+                        product.getCarbohydrate(),
+                        product.getFat(),
+                        product.getSugars(),
+                        product.getEnergy()));
 
-              logger.info("Migrated product: {}", product.getName());
+                logger.info("Migrated product: {}", product.getName());
+              } catch (Exception e) {
+                logger.error("Error while migrating product: {}", product.getName());
+              }
             });
     return true;
   }
@@ -52,7 +58,7 @@ public class ProductMigrationService {
                 ResponseEntity<String> response = getFitatuProductResponse(product.getId());
                 if (response.getStatusCode() == HttpStatus.OK) {
                   productsInformation.add(processProductInformationResponse(response.getBody()));
-                  logger.info("Got data for product id: {}", product.getId());
+                  logger.info("Products amount: {}", productsInformation.size());
                 }
               } catch (HttpClientErrorException e) {
                 logger.error("Error while getting response from Fitatu API");
@@ -74,7 +80,7 @@ public class ProductMigrationService {
   public List<ProductModel> getFitatuGlobalData() {
     var products = new ArrayList<ProductModel>();
 
-    for (var i = 102; i < 103; i++) {
+    for (var i = 17; i < 103; i++) {
       logger.info("Getting data for category: {}", i);
       products.addAll(getProductsForCategory(i));
     }
@@ -85,7 +91,7 @@ public class ProductMigrationService {
   private List<ProductModel> getProductsForCategory(int categoryId) {
     var products = new ArrayList<ProductModel>();
 
-    for (var j = 0; j < 12; j++) {
+    for (var j = 1; j < 12; j++) {
       products.addAll(getProductData(categoryId, j));
     }
 
