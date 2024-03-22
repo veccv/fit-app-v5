@@ -12,7 +12,7 @@ public class ProductService {
   private final ProductRepository productRepository;
 
   public Page<Product> getAllProducts(Pageable page) {
-    return productRepository.findAllPaged(page);
+    return productRepository.findAll(page);
   }
 
   public Product getProductById(Long id) {
