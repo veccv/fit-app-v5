@@ -29,4 +29,8 @@ public class ProductService {
   public boolean productExists(String name) {
     return productRepository.existsByName(name);
   }
+
+  public Page<Product> searchProducts(String query, Pageable page) {
+    return productRepository.findAllByNameContainingIgnoreCase(query, page);
+  }
 }

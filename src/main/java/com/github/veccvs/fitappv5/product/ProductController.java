@@ -22,6 +22,11 @@ public class ProductController {
     return ResponseEntity.ok(productService.getProductById(id));
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<Page<Product>> searchProducts(@RequestParam String query, Pageable page) {
+    return ResponseEntity.ok(productService.searchProducts(query, page));
+  }
+
   @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
     return ResponseEntity.ok(productService.createProduct(product));
