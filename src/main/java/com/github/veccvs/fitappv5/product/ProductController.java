@@ -1,7 +1,8 @@
 package com.github.veccvs.fitappv5.product;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +13,18 @@ public class ProductController {
   private final ProductService productService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<Product>> getAllProducts() {
-    return ResponseEntity.ok(productService.getAllProducts());
+  public ResponseEntity<Page<Product>> getAllProducts(Pageable page) {
+    return ResponseEntity.ok(productService.getAllProducts(page));
   }
 
   @GetMapping
   public ResponseEntity<Product> getProductById(@RequestParam Long id) {
     return ResponseEntity.ok(productService.getProductById(id));
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<Page<Product>> searchProducts(@RequestParam String query, Pageable page) {
+    return ResponseEntity.ok(productService.searchProducts(query, page));
   }
 
   @PostMapping

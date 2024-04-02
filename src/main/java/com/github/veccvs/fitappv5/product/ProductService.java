@@ -1,8 +1,9 @@
 package com.github.veccvs.fitappv5.product;
 
 import com.github.veccvs.fitappv5.exception.ResourceNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class ProductService {
   private final ProductRepository productRepository;
 
-  public List<Product> getAllProducts() {
-    return productRepository.findAll();
+  public Page<Product> getAllProducts(Pageable page) {
+    return productRepository.findAll(page);
   }
 
   public Product getProductById(Long id) {
@@ -23,5 +24,13 @@ public class ProductService {
 
   public Product createProduct(Product product) {
     return productRepository.save(product);
+  }
+
+  public boolean productExists(String name) {
+    return productRepository.existsByName(name);
+  }
+
+  public Page<Product> searchProducts(String query, Pageable page) {
+    return productRepository.findAllByNameContainingIgnoreCase(query, page);
   }
 }

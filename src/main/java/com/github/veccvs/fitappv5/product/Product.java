@@ -8,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Builder
 public class Product {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +28,18 @@ public class Product {
 
   @Column(name = "sugar")
   private String sugar;
+
+  private String fitatuId;
+
+  private String calories;
+
+  public Product(
+      String name, double protein, double carbohydrate, double fat, double sugars, double energy) {
+    this.name = name;
+    this.protein = String.valueOf(protein);
+    this.carbs = String.valueOf(carbohydrate);
+    this.fat = String.valueOf(fat);
+    this.sugar = String.valueOf(sugars);
+    this.calories = String.valueOf(energy);
+  }
 }
