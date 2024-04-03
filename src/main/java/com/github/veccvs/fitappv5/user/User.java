@@ -1,5 +1,6 @@
 package com.github.veccvs.fitappv5.user;
 
+import com.github.veccvs.fitappv5.user.day.UserDay;
 import jakarta.persistence.*;
 import java.util.*;
 import lombok.*;
@@ -33,6 +34,9 @@ public class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  @OneToMany(mappedBy = "userId", orphanRemoval = true)
+  private List<UserDay> userDays = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

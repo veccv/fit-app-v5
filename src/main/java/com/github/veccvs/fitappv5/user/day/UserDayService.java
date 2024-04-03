@@ -21,7 +21,7 @@ public class UserDayService {
       throw new ResourceFoundException("Day has been already created!");
 
     var user = userRepository.findByEmail(authenticationService.getUserLogin()).orElseThrow();
-    return userDayRepository.save(UserDay.builder().date(date).user(user).build());
+    return userDayRepository.save(UserDay.builder().date(date).userId(user.getId()).build());
   }
 
   public UserDay addProductToDay(Integer userDayId, DayTime dayTime, CustomProduct customProduct) {
@@ -32,7 +32,9 @@ public class UserDayService {
                 () ->
                     new ResourceNotFoundException(
                         "User day id [%s] not found".formatted(userDayId)));
-    if (!userDay.getUser().getEmail().equals(authenticationService.getUserLogin()))
+
+    var user = userRepository.findById(userDay.getUserId()).orElseThrow();
+    if (!user.getEmail().equals(authenticationService.getUserLogin()))
       throw new ResourceNotFoundException(
           "User day [%s] does not exist for user [%s]"
               .formatted(userDayId, authenticationService.getUserLogin()));
@@ -51,11 +53,21 @@ public class UserDayService {
             .orElseThrow(
                 () -> new ResourceNotFoundException("User day id [%s] not found".formatted(id)));
 
-    if (!userDay.getUser().getEmail().equals(authenticationService.getUserLogin()))
+    var user = userRepository.findById(userDay.getUserId()).orElseThrow();
+    if (!user.getEmail().equals(authenticationService.getUserLogin()))
       throw new ResourceNotFoundException(
           "User day [%s] does not exist for user [%s]"
               .formatted(id, authenticationService.getUserLogin()));
 
     return userDay;
+  }
+
+  public UserDay getDayByDate(LocalDate date) {
+    var user = userRepository.findByEmail(authenticationService.getUserLogin()).orElseThrow();
+    return userDayRepository.findAllByDateEquals(date).stream()
+        .filter(day -> day.getUserId().equals(user.getId()))
+        .findFirst()
+        .orElseThrow(
+            () -> new ResourceNotFoundException("User day date [%s] not found".formatted(date)));
   }
 }

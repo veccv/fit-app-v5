@@ -3,6 +3,7 @@ package com.github.veccvs.fitappv5.user.day;
 import com.github.veccvs.fitappv5.product.CustomProduct;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,8 @@ public class UserDayController {
   private final UserDayService userDayService;
 
   @PostMapping
-  public ResponseEntity<UserDay> createUserDay(@RequestBody LocalDate date) {
+  public ResponseEntity<UserDay> createUserDay(
+      @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
     return ResponseEntity.ok(userDayService.createUserDay(date));
   }
 
@@ -28,5 +30,10 @@ public class UserDayController {
   @GetMapping
   public ResponseEntity<UserDay> getDay(@RequestParam Integer id) {
     return ResponseEntity.ok(userDayService.getDayById(id));
+  }
+
+  @GetMapping("/date")
+  public ResponseEntity<UserDay> getDay(@RequestParam LocalDate date) {
+    return ResponseEntity.ok(userDayService.getDayByDate(date));
   }
 }
