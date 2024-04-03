@@ -33,4 +33,11 @@ public class ProductService {
   public Page<Product> searchProducts(String query, Pageable page) {
     return productRepository.findAllByNameContainingIgnoreCase(query, page);
   }
+
+  public void deleteProduct(Long id) {
+    if (!productRepository.existsById(id)) {
+      throw new ResourceNotFoundException("Product with id: [%s] not found".formatted(id));
+    }
+    productRepository.deleteById(id);
+  }
 }
