@@ -32,6 +32,12 @@ public class ProductController {
     return ResponseEntity.ok(productService.createProduct(product));
   }
 
+  @DeleteMapping
+  public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
+    productService.deleteProduct(id);
+    return ResponseEntity.ok().build();
+  }
+
   @PutMapping
   public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
     return ResponseEntity.ok(productService.createProduct(product));
