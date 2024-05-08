@@ -33,13 +33,22 @@ public class Product {
 
   private String calories;
 
+  private String weight;
+
   public Product(
-      String name, double protein, double carbohydrate, double fat, double sugars, double energy) {
+      String name,
+      double protein,
+      double carbohydrate,
+      double fat,
+      double sugars,
+      double energy,
+      double weight) {
     this.name = name;
     this.protein = String.valueOf(protein);
     this.carbs = String.valueOf(carbohydrate);
     this.fat = String.valueOf(fat);
     this.sugar = String.valueOf(sugars);
     this.calories = String.valueOf(energy);
+    this.weight = String.valueOf(weight);
   }
 }
