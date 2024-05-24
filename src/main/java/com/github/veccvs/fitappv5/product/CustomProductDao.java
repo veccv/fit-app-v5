@@ -1,7 +1,7 @@
 package com.github.veccvs.fitappv5.product;
 
 import com.github.veccvs.fitappv5.user.day.DayTime;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,19 +9,13 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@Entity
-public class CustomProduct {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
+@Embeddable
+public class CustomProductDao {
   private String name;
   private String protein;
   private String carbs;
   private String fat;
   private String sugar;
   private DayTime dayTime;
-
-  @JoinColumn(name = "userday_id")
   private Integer userDayId;
 }

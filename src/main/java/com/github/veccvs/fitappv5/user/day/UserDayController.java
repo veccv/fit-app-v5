@@ -1,6 +1,5 @@
 package com.github.veccvs.fitappv5.user.day;
 
-import com.github.veccvs.fitappv5.product.CustomProduct;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,13 +17,10 @@ public class UserDayController {
       @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
     return ResponseEntity.ok(userDayService.createUserDay(date));
   }
-
+  
   @PutMapping
-  public ResponseEntity<UserDay> addProductToDay(
-      @RequestParam Integer userDayId,
-      @RequestParam DayTime dayTime,
-      @RequestBody CustomProduct customProduct) {
-    return ResponseEntity.ok(userDayService.addProductToDay(userDayId, dayTime, customProduct));
+  public ResponseEntity<UserDay> addProductsToDay() {
+    return ResponseEntity.ok(userDayService.addProductsToDay());
   }
 
   @GetMapping

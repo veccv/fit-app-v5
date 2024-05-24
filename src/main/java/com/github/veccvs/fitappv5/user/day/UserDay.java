@@ -24,15 +24,8 @@ public class UserDay implements Serializable {
 
   private LocalDate date;
 
-  @ElementCollection
-  @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
-  @Builder.Default
-  private List<CustomProduct> breakfastProducts = new ArrayList<>();
-
-  @ElementCollection
-  @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
-  @Builder.Default
-  private List<CustomProduct> lunchProducts = new ArrayList<>();
+  @OneToMany(mappedBy = "userDayId", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CustomProduct> products = new ArrayList<>();
 
   @Column(name = "user_id")
   private UUID userId;

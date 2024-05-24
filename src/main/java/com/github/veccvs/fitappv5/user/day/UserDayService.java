@@ -3,7 +3,6 @@ package com.github.veccvs.fitappv5.user.day;
 import com.github.veccvs.fitappv5.auth.AuthenticationService;
 import com.github.veccvs.fitappv5.exception.ResourceFoundException;
 import com.github.veccvs.fitappv5.exception.ResourceNotFoundException;
-import com.github.veccvs.fitappv5.product.CustomProduct;
 import com.github.veccvs.fitappv5.user.UserRepository;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -24,27 +23,28 @@ public class UserDayService {
     return userDayRepository.save(UserDay.builder().date(date).userId(user.getId()).build());
   }
 
-  public UserDay addProductToDay(Integer userDayId, DayTime dayTime, CustomProduct customProduct) {
-    var userDay =
-        userDayRepository
-            .findById(userDayId)
-            .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        "User day id [%s] not found".formatted(userDayId)));
-
-    var user = userRepository.findById(userDay.getUserId()).orElseThrow();
-    if (!user.getEmail().equals(authenticationService.getUserLogin()))
-      throw new ResourceNotFoundException(
-          "User day [%s] does not exist for user [%s]"
-              .formatted(userDayId, authenticationService.getUserLogin()));
-
-    if (dayTime == DayTime.BREAKFAST) userDay.getBreakfastProducts().add(customProduct);
-
-    if (dayTime == DayTime.LUNCH) userDay.getLunchProducts().add(customProduct);
-
-    return userDayRepository.save(userDay);
-  }
+  //  public UserDay addProductToDay(
+  //      Integer userDayId, DayTime dayTime, CustomProductDao customProductDao) {
+  //    var userDay =
+  //        userDayRepository
+  //            .findById(userDayId)
+  //            .orElseThrow(
+  //                () ->
+  //                    new ResourceNotFoundException(
+  //                        "User day id [%s] not found".formatted(userDayId)));
+  //
+  //    var user = userRepository.findById(userDay.getUserId()).orElseThrow();
+  //    if (!user.getEmail().equals(authenticationService.getUserLogin()))
+  //      throw new ResourceNotFoundException(
+  //          "User day [%s] does not exist for user [%s]"
+  //              .formatted(userDayId, authenticationService.getUserLogin()));
+  //
+  //    if (dayTime == DayTime.BREAKFAST) userDay.getBreakfastProducts().add(customProductDao);
+  //
+  //    if (dayTime == DayTime.LUNCH) userDay.getLunchProducts().add(customProductDao);
+  //
+  //    return userDayRepository.save(userDay);
+  //  }
 
   public UserDay getDayById(Integer id) {
     var userDay =
@@ -69,5 +69,9 @@ public class UserDayService {
         .findFirst()
         .orElseThrow(
             () -> new ResourceNotFoundException("User day date [%s] not found".formatted(date)));
+  }
+
+  public UserDay addProductsToDay() {
+    return null;
   }
 }
