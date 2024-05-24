@@ -1,11 +1,12 @@
 package com.github.veccvs.fitappv5.user.day;
 
 import com.github.veccvs.fitappv5.product.CustomProduct;
-import com.github.veccvs.fitappv5.user.User;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.*;
 
 @Getter
@@ -15,15 +16,11 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_day")
-public class UserDay {
+public class UserDay implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   private Integer id;
-
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
 
   private LocalDate date;
 
@@ -36,4 +33,7 @@ public class UserDay {
   @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
   @Builder.Default
   private List<CustomProduct> lunchProducts = new ArrayList<>();
+
+  @Column(name = "user_id")
+  private UUID userId;
 }

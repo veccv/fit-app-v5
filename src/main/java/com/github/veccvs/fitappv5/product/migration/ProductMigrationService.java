@@ -8,7 +8,6 @@ import com.github.veccvs.fitappv5.product.ProductService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,22 +24,29 @@ public class ProductMigrationService {
   private static final Logger logger = LoggerFactory.getLogger(ProductMigrationService.class);
 
   public boolean migrateProducts() {
-    getAllProductsInformation().stream()
-        .filter(Objects::nonNull)
-        .filter(productInformation -> !productService.productExists(productInformation.getName()))
+    getFitatuGlobalData()
         .forEach(
             product -> {
               try {
-                productService.createProduct(
-                    new Product(
-                        product.getName(),
-                        product.getProtein(),
-                        product.getCarbohydrate(),
-                        product.getFat(),
-                        product.getSugars(),
-                        product.getEnergy()));
+                ResponseEntity<String> response = getFitatuProductResponse(product.getId());
+                if (response.getStatusCode() == HttpStatus.OK) {
+                  var productInfo = processProductInformationResponse(response.getBody());
+                  if (productInfo != null && !productService.productExists(productInfo.getName())) {
+                    productService.createProduct(
+                        new Product(
+                            productInfo.getName(),
+                            productInfo.getProtein(),
+                            productInfo.getCarbohydrate(),
+                            productInfo.getFat(),
+                            productInfo.getSugars(),
+                            productInfo.getEnergy(),
+                            100));
 
-                logger.info("Migrated product: {}", product.getName());
+                    logger.info("Migrated product: {}", product.getName());
+                  }
+                }
+              } catch (HttpClientErrorException e) {
+                logger.error("Error while getting response from Fitatu API");
               } catch (Exception e) {
                 logger.error("Error while migrating product: {}", product.getName());
               }
