@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://209.135.168.10:5432/postgres
-    username: postgres
-    password: Y^r3#*f3w*hEAY
+    url: <DB_URL>
+    username: <DB_USERNAME>
+    password: <DB_PASSWORD>
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -22,5 +22,5 @@ server:
   port: 7777
 
 jwt:
-  secretKey: 35b7ce1a67f811e670e8574880be67a68f4cbe9e068d7a747ab0c1614d620d9e
+  secretKey: <JWT_SECRETKEY>
   tokenExpirationHours: 24
