@@ -18,7 +18,7 @@ jobs:
         run: sed -i 's#<DB_USERNAME>#${{ secrets.DB_USERNAME }}#' src/main/resources/application.yml
 
       - name: Update db password
-        run: sed -i 's#<DB_PASSWORD>#${{ secrets.DB_PASSWORD }}#' src/main/resources/application.yml
+        run: sed -i 's@<DB_PASSWORD>@${{ secrets.DB_PASSWORD }}@' src/main/resources/application.yml
 
       - name: Update jwt key
         run: sed -i 's#<JWT_SECRETKEY>#${{ secrets.JWT_SECRETKEY }}#' src/main/resources/application.yml
