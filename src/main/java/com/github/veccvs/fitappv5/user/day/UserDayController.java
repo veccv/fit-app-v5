@@ -2,6 +2,7 @@ package com.github.veccvs.fitappv5.user.day;
 
 import com.github.veccvs.fitappv5.product.CustomProduct;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,14 @@ public class UserDayController {
       @RequestParam DayTime dayTime,
       @RequestBody CustomProduct customProduct) {
     return ResponseEntity.ok(userDayService.addProductToDay(userDayId, dayTime, customProduct));
+  }
+
+  @PutMapping("/products")
+  public ResponseEntity<UserDay> addProductsToDay(
+      @RequestParam Integer userDayId,
+      @RequestParam DayTime dayTime,
+      @RequestBody List<CustomProduct> customProducts) {
+    return ResponseEntity.ok(userDayService.addProductsToDay(userDayId, dayTime, customProducts));
   }
 
   @GetMapping
