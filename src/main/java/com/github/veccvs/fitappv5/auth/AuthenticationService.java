@@ -25,15 +25,15 @@ public class AuthenticationService {
 
   public AuthenticationResponse register(RegisterRequest request) {
     var user =
-        User.builder()
-            .firstname(request.getFirstname())
-            .lastname(request.getLastname())
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .role(Role.USER)
-            .build();
+        new User(
+            request.getLastname(),
+            request.getFirstname(),
+            request.getEmail(),
+            passwordEncoder.encode(request.getPassword()),
+            Role.USER);
 
-    if (userRepository.findByEmail(user.getEmail()).isPresent())
+    if (!userRepository.findAllByEmail(user.getEmail()).isEmpty()
+        && userRepository.findByEmail(user.getEmail()).isPresent())
       throw new ResourceFoundException(
           "User with email [%s] already exist.".formatted(user.getEmail()));
 

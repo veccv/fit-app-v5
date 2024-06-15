@@ -15,4 +15,6 @@ public class CustomProduct {
   private String carbs;
   private String fat;
   private String sugar;
+  private String weight;
+  private String calories;
 }
