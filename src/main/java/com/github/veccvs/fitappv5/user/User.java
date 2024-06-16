@@ -1,6 +1,5 @@
 package com.github.veccvs.fitappv5.user;
 
-import com.github.veccvs.fitappv5.user.day.UserDay;
 import jakarta.persistence.*;
 import java.util.*;
 import lombok.*;
@@ -12,13 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
-@Entity(name = "_user")
+@Entity
+@Table(name = "_user")
 public class User implements UserDetails {
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-  private UUID id;
+  private Long id;
 
   @Column(name = "lastname")
   private String lastname;
@@ -35,8 +34,13 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @OneToMany(mappedBy = "userId", orphanRemoval = true)
-  private List<UserDay> userDays = new ArrayList<>();
+  public User(String lastname, String firstname, String email, String password, Role role) {
+    this.lastname = lastname;
+    this.firstname = firstname;
+    this.email = email;
+    this.password = password;
+    this.role = role;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.*;
 
 @Getter
@@ -24,6 +23,8 @@ public class UserDay implements Serializable {
 
   private LocalDate date;
 
+  private Long userId;
+
   @ElementCollection
   @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
   @Builder.Default
@@ -33,7 +34,4 @@ public class UserDay implements Serializable {
   @CollectionTable(joinColumns = @JoinColumn(name = "userday_id"))
   @Builder.Default
   private List<CustomProduct> lunchProducts = new ArrayList<>();
-
-  @Column(name = "user_id")
-  private UUID userId;
 }

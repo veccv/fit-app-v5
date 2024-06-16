@@ -6,6 +6,7 @@ import com.github.veccvs.fitappv5.exception.ResourceNotFoundException;
 import com.github.veccvs.fitappv5.product.CustomProduct;
 import com.github.veccvs.fitappv5.user.UserRepository;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +70,12 @@ public class UserDayService {
         .findFirst()
         .orElseThrow(
             () -> new ResourceNotFoundException("User day date [%s] not found".formatted(date)));
+  }
+
+  public UserDay addProductsToDay(
+      Integer userDayId, DayTime dayTime, List<CustomProduct> customProducts) {
+    customProducts.forEach(customProduct -> addProductToDay(userDayId, dayTime, customProduct));
+
+    return getDayById(userDayId);
   }
 }
