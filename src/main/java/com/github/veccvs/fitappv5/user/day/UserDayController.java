@@ -20,7 +20,7 @@ public class UserDayController {
     return ResponseEntity.ok(userDayService.createUserDay(date));
   }
 
-  @PutMapping
+  @PutMapping("/product")
   public ResponseEntity<UserDay> addProductToDay(
       @RequestParam Integer userDayId,
       @RequestParam DayTime dayTime,
@@ -34,6 +34,11 @@ public class UserDayController {
       @RequestParam DayTime dayTime,
       @RequestBody List<CustomProduct> customProducts) {
     return ResponseEntity.ok(userDayService.addProductsToDay(userDayId, dayTime, customProducts));
+  }
+
+  @PutMapping
+  public ResponseEntity<UserDay> updateDay(@RequestBody UserDay userDay) {
+    return ResponseEntity.ok(userDayService.updateDay(userDay));
   }
 
   @GetMapping
