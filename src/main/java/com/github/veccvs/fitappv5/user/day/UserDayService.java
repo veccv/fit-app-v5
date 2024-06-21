@@ -78,4 +78,8 @@ public class UserDayService {
 
     return getDayById(userDayId);
   }
+
+  public UserDay updateDay(UserDay userDay) {
+    return userDayRepository.save(userDay);
+  }
 }
