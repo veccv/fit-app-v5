@@ -17,4 +17,5 @@ public class CustomProduct {
   private String sugar;
   private String weight;
   private String calories;
+  private Long originProductId;
 }
